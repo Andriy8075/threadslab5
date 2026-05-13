@@ -18,22 +18,21 @@ class T1 extends Thread {
             double[] x1 = (double[]) data.receive(2, 1, "X1");
             double[] x3 = (double[]) data.receive(2, 1, "X3");
             double[] f1 = (double[]) data.receive(2, 1, "F1");
-            double[] x = (double[]) data.receive(2, 1, "X");
 
             data.send(1, 3, "X3", x3);
-            data.send(1, 3, "X", x);
             data.send(1, 3, "MA3", Data.matrixRows(ma, 3));
             data.send(1, 3, "MA4", Data.matrixRows(ma, 4));
-            data.send(1, 3, "MA", ma);
 
-            double[] ms1 = (double[]) data.receive(3, 1, "MS1");
-            double[] ms2 = (double[]) data.receive(3, 1, "MS2");
-            double[][] ms = (double[][]) data.receive(3, 1, "MS");
+            double[][] ms1 = (double[][]) data.receive(3, 1, "MS1");
+            double[][] ms2 = (double[][]) data.receive(3, 1, "MS2");
 
             data.send(1, 2, "MA2", Data.matrixRows(ma, 2));
             data.send(1, 2, "MS2", ms2);
-            data.send(1, 2, "MA", ma);
-            data.send(1, 2, "MS", ms);
+
+            double[] p1 = Data.multiplyVectorByMatrixRows(x1, Data.matrixRows(ma, 1));
+            double[] p2 = (double[]) data.receive(2, 1, "P2");
+            double[] p34 = (double[]) data.receive(3, 1, "P34");
+            double[] y = Data.sumVectors(p1, p2, p34);
 
             double m1 = Data.min(x1);
             double m3 = (Double) data.receive(3, 1, "m3");
@@ -42,8 +41,10 @@ class T1 extends Thread {
 
             double minX = (Double) data.receive(2, 1, "m");
             data.send(1, 3, "m", minX);
+            data.send(1, 2, "Y", y);
+            data.send(1, 3, "Y", y);
 
-            double[] z1 = Data.computeZPart(x, ma, ms, f1, minX, 1);
+            double[] z1 = Data.computeZPart(y, ms1, f1, minX);
             double[] z2 = (double[]) data.receive(2, 1, "Z2");
             double[] z3 = (double[]) data.receive(3, 1, "Z3");
             double[] z4 = (double[]) data.receive(3, 1, "Z4");

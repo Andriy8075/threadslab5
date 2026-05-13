@@ -82,6 +82,18 @@ class Data {
         return rows;
     }
 
+    public static double[][] matrixColumns(double[][] matrix, int part) {
+        int from = from(part);
+        int to = to(part);
+        double[][] columns = new double[N][to - from];
+        for (int i = 0; i < N; i++) {
+            for (int j = from; j < to; j++) {
+                columns[i][j - from] = matrix[i][j];
+            }
+        }
+        return columns;
+    }
+
     public static double min(double[] vector) {
         double min = vector[0];
         for (double value : vector) {
@@ -90,20 +102,42 @@ class Data {
         return min;
     }
 
-    public static double[] computeZPart(double[] x, double[][] ma, double[][] ms, double[] fPart, double minX, int part) {
-        int from = from(part);
-        int to = to(part);
-        double[] zPart = new double[to - from];
-        for (int j = from; j < to; j++) {
+    public static double[] multiplyVectorByMatrixRows(double[] xPart, double[][] maRows) {
+        double[] result = new double[N];
+        for (int j = 0; j < N; j++) {
+            double sum = 0.0;
+            for (int i = 0; i < xPart.length; i++) {
+                sum += xPart[i] * maRows[i][j];
+            }
+            result[j] = sum;
+        }
+        return result;
+    }
+
+    public static double[] sumVectors(double[] first, double[] second) {
+        double[] result = new double[first.length];
+        for (int i = 0; i < first.length; i++) {
+            result[i] = first[i] + second[i];
+        }
+        return result;
+    }
+
+    public static double[] sumVectors(double[] first, double[] second, double[] third) {
+        double[] result = new double[first.length];
+        for (int i = 0; i < first.length; i++) {
+            result[i] = first[i] + second[i] + third[i];
+        }
+        return result;
+    }
+
+    public static double[] computeZPart(double[] y, double[][] msColumns, double[] fPart, double minX) {
+        double[] zPart = new double[fPart.length];
+        for (int j = 0; j < fPart.length; j++) {
             double product = 0.0;
             for (int k = 0; k < N; k++) {
-                double maMs = 0.0;
-                for (int l = 0; l < N; l++) {
-                    maMs += ma[k][l] * ms[l][j];
-                }
-                product += x[k] * maMs;
+                product += y[k] * msColumns[k][j];
             }
-            zPart[j - from] = product + minX * fPart[j - from];
+            zPart[j] = product + minX * fPart[j];
         }
         return zPart;
     }

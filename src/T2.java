@@ -21,14 +21,12 @@ class T2 extends Thread {
             data.send(2, 1, "X1", Data.vectorPart(x, 1));
             data.send(2, 1, "X3", Data.vectorPart(x, 3));
             data.send(2, 1, "F1", f1);
-            data.send(2, 1, "X", x);
             data.send(2, 4, "X4", Data.vectorPart(x, 4));
-            data.send(2, 4, "X", x);
 
-            data.receive(1, 2, "MA2");
-            data.receive(1, 2, "MS2");
-            double[][] ma = (double[][]) data.receive(1, 2, "MA");
-            double[][] ms = (double[][]) data.receive(1, 2, "MS");
+            double[][] ma2 = (double[][]) data.receive(1, 2, "MA2");
+            double[][] ms2 = (double[][]) data.receive(1, 2, "MS2");
+            double[] p2 = Data.multiplyVectorByMatrixRows(Data.vectorPart(x, 2), ma2);
+            data.send(2, 1, "P2", p2);
 
             double m2 = Data.min(Data.vectorPart(x, 2));
             double m4 = (Double) data.receive(4, 2, "m4");
@@ -39,7 +37,8 @@ class T2 extends Thread {
             data.send(2, 1, "m", minX);
             data.send(2, 4, "m", minX);
 
-            double[] z2 = Data.computeZPart(x, ma, ms, f2, minX, 2);
+            double[] y = (double[]) data.receive(1, 2, "Y");
+            double[] z2 = Data.computeZPart(y, ms2, f2, minX);
             data.send(2, 1, "Z2", z2);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
