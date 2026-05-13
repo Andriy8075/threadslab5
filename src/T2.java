@@ -1,0 +1,49 @@
+import java.util.Random;
+
+class T2 extends Thread {
+    private final Data data;
+
+    public T2(Data data) {
+        super("T2");
+        this.data = data;
+    }
+
+    @Override
+    public void run() {
+        try {
+            double[] x = Data.useRandomInput
+                    ? Data.fillVectorRandom(Data.N, new Random(202))
+                    : data.manualX;
+
+            double[] f1 = (double[]) data.receive(4, 2, "F1");
+            double[] f2 = (double[]) data.receive(4, 2, "F2");
+
+            data.send(2, 1, "X1", Data.vectorPart(x, 1));
+            data.send(2, 1, "X3", Data.vectorPart(x, 3));
+            data.send(2, 1, "F1", f1);
+            data.send(2, 1, "X", x);
+            data.send(2, 4, "X4", Data.vectorPart(x, 4));
+            data.send(2, 4, "X", x);
+
+            data.receive(1, 2, "MA2");
+            data.receive(1, 2, "MS2");
+            double[][] ma = (double[][]) data.receive(1, 2, "MA");
+            double[][] ms = (double[][]) data.receive(1, 2, "MS");
+
+            double m2 = Data.min(Data.vectorPart(x, 2));
+            double m4 = (Double) data.receive(4, 2, "m4");
+            double m1 = (Double) data.receive(1, 2, "m1");
+            double m3 = (Double) data.receive(1, 2, "m3");
+            double minX = Math.min(Math.min(m1, m2), Math.min(m3, m4));
+
+            data.send(2, 1, "m", minX);
+            data.send(2, 4, "m", minX);
+
+            double[] z2 = Data.computeZPart(x, ma, ms, f2, minX, 2);
+            data.send(2, 1, "Z2", z2);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+}
