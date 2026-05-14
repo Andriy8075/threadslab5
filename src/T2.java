@@ -1,5 +1,9 @@
 import java.util.Random;
 
+/**
+ * T2: вводить X, обчислює глобальний m = min(X) та свою частину Z2.
+ * Має прямий обмін тільки з T1 і T4.
+ */
 class T2 extends Thread {
     private final Data data;
 
@@ -32,6 +36,7 @@ class T2 extends Thread {
             double[][] ms = (double[][]) data.receive(1, 2, "MS");
 
             // Крок 6. Обчислення m2
+            // m2 — мінімум другої чверті X.
             double m2 = Data.min(Data.vectorPart(x, 2));
 
             // Крок 7. Прийняти m4 від T4
@@ -42,6 +47,7 @@ class T2 extends Thread {
             double m3 = (Double) data.receive(1, 2, "m3");
 
             // Крок 9. Обчислення m
+            // Зведення локальних мінімумів m1..m4 у глобальний мінімум X.
             double minX = Math.min(Math.min(m1, m2), Math.min(m3, m4));
 
             // Крок 10. Передати m до T1

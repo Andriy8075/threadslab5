@@ -1,9 +1,5 @@
 import java.util.Scanner;
 
-/**
- * ЛР5. Варіант 8.
- * Z = X * (MA * MS) + min(X) * F.
- */
 public class Lab5 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -23,6 +19,7 @@ public class Lab5 {
         System.out.println("Lab5: N=" + Data.N + ", mode=" + (Data.useRandomInput ? "random" : "manual"));
 
         Data data = new Data();
+        // У manual-режимі введення виконується до запуску потоків, щоб не змішувати Scanner між задачами.
         if (!Data.useRandomInput) {
             data.allocateInputStorage();
             data.readAllManual(scanner);
@@ -34,17 +31,20 @@ public class Lab5 {
 
         long startTime = System.nanoTime();
 
+        // Створення задач згідно зі схемою: T1-MA, T2-X, T3-MS, T4-F.
         Thread t1 = new T1(data);
         Thread t2 = new T2(data);
         Thread t3 = new T3(data);
         Thread t4 = new T4(data);
 
+        // Паралельний старт задач.
         t1.start();
         t2.start();
         t3.start();
         t4.start();
 
         try {
+            // Головний потік чекає завершення всіх задач перед підрахунком часу.
             t1.join();
             t2.join();
             t3.join();

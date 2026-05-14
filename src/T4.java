@@ -1,5 +1,9 @@
 import java.util.Random;
 
+/**
+ * T4: вводить F, обчислює m4 та свою частину Z4.
+ * За схемою взаємодіє тільки з T2 і T3.
+ */
 class T4 extends Thread {
     private final Data data;
 
@@ -25,6 +29,7 @@ class T4 extends Thread {
 
             // Крок 4. Прийняти X від T2
             double[] x = (double[]) data.receive(2, 4, "X");
+            // X4 потрібен для локального мінімуму m4.
             double[] x4 = Data.vectorPart(x, 4);
 
             // Крок 5. Прийняти MA4 та MS від T3
@@ -32,6 +37,7 @@ class T4 extends Thread {
             double[][] ms = (double[][]) data.receive(3, 4, "MS");
 
             // Крок 6. Обчислення m4
+            // m4 — мінімум четвертої чверті X.
             double m4 = Data.min(x4);
 
             // Крок 7. Передати m4 до T2

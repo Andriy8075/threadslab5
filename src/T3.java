@@ -1,5 +1,9 @@
 import java.util.Random;
 
+/**
+ * T3: вводить MS, обчислює Z3 і передає T1 результати Z3 та Z4.
+ * За схемою взаємодіє тільки з T1 і T4.
+ */
 class T3 extends Thread {
     private final Data data;
 
@@ -21,6 +25,7 @@ class T3 extends Thread {
 
             // Крок 3. Прийняти X, MA3 та MA4 від T1
             double[] x = (double[]) data.receive(1, 3, "X");
+            // X3 потрібен для локального мінімуму m3.
             double[] x3 = Data.vectorPart(x, 3);
             double[][] ma3 = (double[][]) data.receive(1, 3, "MA3");
             double[][] ma4 = (double[][]) data.receive(1, 3, "MA4");
@@ -33,6 +38,7 @@ class T3 extends Thread {
             data.send(3, 1, "MS", ms);
 
             // Крок 6. Обчислення m3
+            // m3 — мінімум третьої чверті X.
             double m3 = Data.min(x3);
 
             // Крок 7. Передати m3 до T1

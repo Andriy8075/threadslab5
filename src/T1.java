@@ -1,5 +1,9 @@
 import java.util.Random;
 
+/**
+ * T1: вводить MA, обчислює Z1 та збирає повний результат Z.
+ * Усі обміни виконуються тільки з сусідніми задачами T2 і T3.
+ */
 class T1 extends Thread {
     private final Data data;
 
@@ -19,6 +23,7 @@ class T1 extends Thread {
             // Крок 2. Прийняти X та F1 від T2
             double[] x = (double[]) data.receive(2, 1, "X");
             double[] f1 = (double[]) data.receive(2, 1, "F1");
+            // X1 потрібен тільки для локального мінімуму m1.
             double[] x1 = Data.vectorPart(x, 1);
 
             // Крок 3. Передати X, MA3 та MA4 в T3
@@ -60,6 +65,7 @@ class T1 extends Thread {
             double[] z4 = (double[]) data.receive(3, 1, "Z4");
 
             // Крок 14. Виведення Z
+            // Збирання чотирьох частин Z1..Z4 в один результуючий вектор.
             double[] z = new double[Data.N];
             copyPart(z, z1, 1);
             copyPart(z, z2, 2);
