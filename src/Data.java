@@ -37,7 +37,6 @@ class Data {
         }
         mailbox.add(new Message(tag, copyPayload(payload)));
         notifyAll();
-        System.out.println("T" + from + " sent " + tag + " to T" + to);
     }
 
     public synchronized Object receive(int from, int to, String tag) throws InterruptedException {
@@ -50,7 +49,6 @@ class Data {
                 Message message = mailbox.get(i);
                 if (message.tag.equals(tag)) {
                     mailbox.remove(i);
-                    System.out.println("T" + to + " received " + tag + " from T" + from);
                     return copyPayload(message.payload);
                 }
             }
