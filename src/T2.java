@@ -25,8 +25,6 @@ class T2 extends Thread {
 
             double[][] ma2 = (double[][]) data.receive(1, 2, "MA2");
             double[][] ms2 = (double[][]) data.receive(1, 2, "MS2");
-            double[] p2 = Data.multiplyVectorByMatrixRows(Data.vectorPart(x, 2), ma2);
-            data.send(2, 1, "P2", p2);
 
             double m2 = Data.min(Data.vectorPart(x, 2));
             double m4 = (Double) data.receive(4, 2, "m4");
@@ -36,6 +34,9 @@ class T2 extends Thread {
 
             data.send(2, 1, "m", minX);
             data.send(2, 4, "m", minX);
+
+            double[] p2 = Data.multiplyVectorByMatrixRows(Data.vectorPart(x, 2), ma2);
+            data.send(2, 1, "P2", p2);
 
             double[] y = (double[]) data.receive(1, 2, "Y");
             double[] z2 = Data.computeZPart(y, ms2, f2, minX);

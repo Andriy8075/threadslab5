@@ -29,11 +29,6 @@ class T1 extends Thread {
             data.send(1, 2, "MA2", Data.matrixRows(ma, 2));
             data.send(1, 2, "MS2", ms2);
 
-            double[] p1 = Data.multiplyVectorByMatrixRows(x1, Data.matrixRows(ma, 1));
-            double[] p2 = (double[]) data.receive(2, 1, "P2");
-            double[] p34 = (double[]) data.receive(3, 1, "P34");
-            double[] y = Data.sumVectors(p1, p2, p34);
-
             double m1 = Data.min(x1);
             double m3 = (Double) data.receive(3, 1, "m3");
             data.send(1, 2, "m1", m1);
@@ -41,6 +36,13 @@ class T1 extends Thread {
 
             double minX = (Double) data.receive(2, 1, "m");
             data.send(1, 3, "m", minX);
+
+            // Обчислення Z
+            double[] p1 = Data.multiplyVectorByMatrixRows(x1, Data.matrixRows(ma, 1));
+            double[] p2 = (double[]) data.receive(2, 1, "P2");
+            double[] p34 = (double[]) data.receive(3, 1, "P34");
+            double[] y = Data.sumVectors(p1, p2, p34);
+
             data.send(1, 2, "Y", y);
             data.send(1, 3, "Y", y);
 

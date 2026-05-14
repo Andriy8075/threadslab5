@@ -25,14 +25,14 @@ class T3 extends Thread {
             data.send(3, 1, "MS1", Data.matrixColumns(ms, 1));
             data.send(3, 1, "MS2", Data.matrixColumns(ms, 2));
 
-            double[] p3 = Data.multiplyVectorByMatrixRows(x3, ma3);
-            double[] p4 = (double[]) data.receive(4, 3, "P4");
-            data.send(3, 1, "P34", Data.sumVectors(p3, p4));
-
             double m3 = Data.min(x3);
             data.send(3, 1, "m3", m3);
 
             double minX = (Double) data.receive(1, 3, "m");
+            double[] p3 = Data.multiplyVectorByMatrixRows(x3, ma3);
+            double[] p4 = (double[]) data.receive(4, 3, "P4");
+            data.send(3, 1, "P34", Data.sumVectors(p3, p4));
+
             double[] y = (double[]) data.receive(1, 3, "Y");
             data.send(3, 4, "Y", y);
 
