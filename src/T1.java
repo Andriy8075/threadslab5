@@ -16,23 +16,22 @@ class T1 extends Thread {
                     ? Data.fillMatrixRandom(Data.N, new Random(101))
                     : data.manualMA;
 
-            // Крок 2. Прийняти X1, X3 та F1 від T2
-            double[] x1 = (double[]) data.receive(2, 1, "X1");
-            double[] x3 = (double[]) data.receive(2, 1, "X3");
+            // Крок 2. Прийняти X та F1 від T2
+            double[] x = (double[]) data.receive(2, 1, "X");
             double[] f1 = (double[]) data.receive(2, 1, "F1");
+            double[] x1 = Data.vectorPart(x, 1);
 
-            // Крок 3. Передати X3, MA3 та MA4 в T3
-            data.send(1, 3, "X3", x3);
+            // Крок 3. Передати X, MA3 та MA4 в T3
+            data.send(1, 3, "X", x);
             data.send(1, 3, "MA3", Data.matrixRows(ma, 3));
             data.send(1, 3, "MA4", Data.matrixRows(ma, 4));
 
-            // Крок 4. Прийняти MS1 та MS2 від T3
-            double[][] ms1 = (double[][]) data.receive(3, 1, "MS1");
-            double[][] ms2 = (double[][]) data.receive(3, 1, "MS2");
+            // Крок 4. Прийняти MS від T3
+            double[][] ms = (double[][]) data.receive(3, 1, "MS");
 
-            // Крок 5. Передати MA2 та MS2 в T2
+            // Крок 5. Передати MA2 та MS в T2
             data.send(1, 2, "MA2", Data.matrixRows(ma, 2));
-            data.send(1, 2, "MS2", ms2);
+            data.send(1, 2, "MS", ms);
 
             // Крок 6. Обчислення m1 = min(X1)
             double m1 = Data.min(x1);
@@ -51,15 +50,7 @@ class T1 extends Thread {
             data.send(1, 3, "m", minX);
 
             // Крок 11. Обчислення Z1
-            double[] p1 = Data.multiplyVectorByMatrixRows(x1, Data.matrixRows(ma, 1));
-            double[] p2 = (double[]) data.receive(2, 1, "P2");
-            double[] p34 = (double[]) data.receive(3, 1, "P34");
-            double[] y = Data.sumVectors(p1, p2, p34);
-
-            data.send(1, 2, "Y", y);
-            data.send(1, 3, "Y", y);
-
-            double[] z1 = Data.computeZPart(y, ms1, f1, minX);
+            double[] z1 = Data.computeZPart(x, Data.matrixRows(ma, 1), ms, f1, minX);
 
             // Крок 12. Прийняти Z2 від T2
             double[] z2 = (double[]) data.receive(2, 1, "Z2");

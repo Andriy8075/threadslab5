@@ -20,17 +20,16 @@ class T2 extends Thread {
             double[] f1 = (double[]) data.receive(4, 2, "F1");
             double[] f2 = (double[]) data.receive(4, 2, "F2");
 
-            // Крок 3. Передати X1, X3 та F1 в T1
-            data.send(2, 1, "X1", Data.vectorPart(x, 1));
-            data.send(2, 1, "X3", Data.vectorPart(x, 3));
+            // Крок 3. Передати X та F1 в T1
+            data.send(2, 1, "X", x);
             data.send(2, 1, "F1", f1);
 
-            // Крок 4. Передати X4 в T4
-            data.send(2, 4, "X4", Data.vectorPart(x, 4));
+            // Крок 4. Передати X в T4
+            data.send(2, 4, "X", x);
 
-            // Крок 5. Прийняти MA2 та MS2 від T1
+            // Крок 5. Прийняти MA2 та MS від T1
             double[][] ma2 = (double[][]) data.receive(1, 2, "MA2");
-            double[][] ms2 = (double[][]) data.receive(1, 2, "MS2");
+            double[][] ms = (double[][]) data.receive(1, 2, "MS");
 
             // Крок 6. Обчислення m2
             double m2 = Data.min(Data.vectorPart(x, 2));
@@ -52,11 +51,7 @@ class T2 extends Thread {
             data.send(2, 4, "m", minX);
 
             // Крок 12. Обчислення Z2
-            double[] p2 = Data.multiplyVectorByMatrixRows(Data.vectorPart(x, 2), ma2);
-            data.send(2, 1, "P2", p2);
-
-            double[] y = (double[]) data.receive(1, 2, "Y");
-            double[] z2 = Data.computeZPart(y, ms2, f2, minX);
+            double[] z2 = Data.computeZPart(x, ma2, ms, f2, minX);
 
             // Крок 13. Передати Z2 до T1
             data.send(2, 1, "Z2", z2);

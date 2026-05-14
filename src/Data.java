@@ -130,14 +130,18 @@ class Data {
         return result;
     }
 
-    public static double[] computeZPart(double[] y, double[][] msColumns, double[] fPart, double minX) {
+    public static double[] computeZPart(double[] x, double[][] maRows, double[][] ms, double[] fPart, double minX) {
         double[] zPart = new double[fPart.length];
-        for (int j = 0; j < fPart.length; j++) {
+        for (int i = 0; i < fPart.length; i++) {
             double product = 0.0;
-            for (int k = 0; k < N; k++) {
-                product += y[k] * msColumns[k][j];
+            for (int j = 0; j < N; j++) {
+                double maMs = 0.0;
+                for (int k = 0; k < N; k++) {
+                    maMs += maRows[i][k] * ms[k][j];
+                }
+                product += maMs * x[j];
             }
-            zPart[j] = product + minX * fPart[j];
+            zPart[i] = product + minX * fPart[i];
         }
         return zPart;
     }
